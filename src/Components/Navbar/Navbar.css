@@ -1,0 +1,42 @@
+.navbar-wrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 40px;
+  z-index: 10;
+  background-color: white;
+  align-content: right;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.navbar-menu{
+  display: flex;
+}
+
+.navbar-menu .item{
+  margin: 10px;
+  cursor: pointer;
+}
+
+.navbar-menu .item-text{
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.navbar-menu .login-prompt-btn{
+  margin: 0 10px;
+  padding: 0 15px;
+  color: #FFFFFF;
+  background-color: #6AB484;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.text-no-margin h5{
+  margin-bottom: 1px !important;
+}
+
+.text-no-margin h6{
+  margin-top: 1px !important;
+}
