@@ -15,6 +15,7 @@ import { AccountCircleOutlined, AccountCircleTwoTone } from '@material-ui/icons'
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import SearchBar from '../SearchBar/SearchBar';
+import CategoriesSelect from '../CategoriesSelect/CategoriesSelect';
 
 const StyledMenu = withStyles({
   paper: {
@@ -183,40 +184,51 @@ const Navbar = () => {
   }
 
   return (
-    <div class="navbar-wrapper" style={{display: 'flex'}}>
-      <div style={{width: '30%', marginRight: '10px'}}>
-        <img
-          src={logo}
-          alt='logo'
-          style={{cursor: 'pointer', height: '30px', marginTop: '12px'}}
-          onClick={() => {history.push('/home')}}
-        />
-      </div>
-      <SearchBar handleSearch={(value) => handleSearch(value)}/>
-      {
-        location.pathname==='/login' ||
-        location.pathname==='/register' ?
-        <></> :
-        <div style={{width: '15%'}}></div>
-      }
-      <div
-        style={{
-          width: `${
+    <>
+    <div class="navbar-full-wrapper">
+      <div class="navbar-wrapper">
+        <div style={{display: 'flex'}}>
+          <div style={{width: '30%', marginRight: '10px'}}>
+            <img
+              src={logo}
+              alt='logo'
+              style={{cursor: 'pointer', height: '30px', marginTop: '12px'}}
+              onClick={() => {history.push('/home')}}
+            />
+          </div>
+          <SearchBar handleSearch={(value) => handleSearch(value)}/>
+          {
             location.pathname==='/login' ||
             location.pathname==='/register' ?
-            '50%' : '35%'
-          }`,
-          marginLeft: '20px'
-        }}
-      >
-        {
-          !!currentUser &&
-          !(location.pathname==='/login' ||
-          location.pathname==='/register') ?
-            renderNavbarMenu() : renderLoginPrompt()
-        }
+            <></> :
+            <div style={{width: '15%'}}></div>
+          }
+          <div
+            style={{
+              width: `${
+                location.pathname==='/login' ||
+                location.pathname==='/register' ?
+                '50%' : '35%'
+              }`,
+              marginLeft: '20px'
+            }}
+          >
+            {
+              !!currentUser &&
+              !(location.pathname==='/login' ||
+              location.pathname==='/register') ?
+                renderNavbarMenu() : renderLoginPrompt()
+            }
+          </div>
+        </div>
+      </div>
+      <div class="navbar-wrapper">
+        <div style={{display: 'flex'}}>
+          <CategoriesSelect/>
+        </div>
       </div>
     </div>
+    </>
   )
 }
 
