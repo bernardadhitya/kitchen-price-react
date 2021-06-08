@@ -4,6 +4,7 @@ import 'firebase/auth';
 import { firebaseConfig, supabaseConfig } from './env';
 import { getJobRatingByRatingList } from './Constants/rating';
 import { createClient } from '@supabase/supabase-js'
+import { categories } from './Constants/categories';
 
 var _ = require('lodash');
 
@@ -201,10 +202,46 @@ export const getJobsByCurrentUserIdAndStatus = async (status) => {
   return fetchedJobsByCurrentUser;
 }
 
-export const getProductsByQueries = async (queries) => {
-  const { query: searchString } = queries;
-  console.log('search:', searchString)
-  
+export const getAllProducts = async () => {
+  let { data: priorityProducts } = await supabase
+  .from('products')
+  .select('*')
+  .not('image', 'is', null)
+
+  let { data: products } = await supabase
+  .from('products')
+  .select('*')
+  .is('image', null)
+
+  let allProducts = [...priorityProducts, ...products];
+  let groupedProducts = []
+
+  while (allProducts.length > 0) {
+    groupedProducts.push(allProducts.splice(0,20))
+  }
+
+  console.log(groupedProducts);
+
+  return groupedProducts;
+}
+
+const getProductsByCategory = async (category) => {
+  let { data: priorityProducts } = await supabase
+  .from('products')
+  .select('*')
+  .eq('category', category)
+  .not('image', 'is', null)
+
+  let { data: products } = await supabase
+  .from('products')
+  .select('*')
+  .eq('category', category)
+  .is('image', null)
+
+  return [...priorityProducts, ...products]
+}
+
+const getProductsByTitle = async (searchString) => {
   let { data: priorityProducts } = await supabase
   .from('products')
   .select('*')
@@ -217,7 +254,62 @@ export const getProductsByQueries = async (queries) => {
   .ilike('title', `%${searchString}%`)
   .is('image', null)
 
-  let allProducts = [...priorityProducts, ...products];
+  return [...priorityProducts, ...products]
+}
+
+const getProductsByTopic = async (topic) => {
+  let allProducts = []
+
+  const getAllPriorityProductsByTopic = async () => {
+    await Promise.all(
+      categories[topic].map(async (category) => {
+        let { data } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', category)
+          .not('image', 'is', null);
+        allProducts.push(...data);
+        return category
+      })
+    );
+  }
+
+  const getAllProductsByTopic = async () => {
+    await Promise.all(
+      categories[topic].map(async (category) => {
+        let { data } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', category)
+          .is('image', null)
+        allProducts.push(...data);
+        return category
+      })
+    );
+  }
+
+  await getAllPriorityProductsByTopic();
+  await getAllProductsByTopic();
+
+  console.log(allProducts);
+
+  return allProducts;
+}
+
+export const getProductsByQueries = async (queries) => {
+  const { query: searchString, category = '', topic } = queries;
+  
+  let allProducts = []
+
+  if (!!topic) {
+    console.log('called');
+    allProducts = await getProductsByTopic(topic);
+  } else {
+    const productsByCategory = await getProductsByCategory(category);
+    const productByTitle = await getProductsByTitle(searchString);
+    allProducts = [...productByTitle, ...productsByCategory];
+  }
+
   let groupedProducts = []
 
   while (allProducts.length > 0) {

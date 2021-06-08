@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { categories } from '../../Constants/categories'; 
 import MenuIcon from '@material-ui/icons/Menu';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useHistory } from "react-router";
 
 const DropDownContainer = styled("div")`
 `;
@@ -43,13 +44,27 @@ const CategoriesSelect = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
+  const history = useHistory();
+
   const toggling = () => setIsOpen(!isOpen);
 
-  const onOptionClicked = value => () => {
-    setSelectedOption(value);
+  const handleCategoryClick = (categoryQuery) => {
+    setSelectedOption(categoryQuery);
     setIsOpen(false);
     console.log(selectedOption);
-  };
+
+    history.push({
+      search: `?category=${categoryQuery || ''}`,
+      pathname: '/search/'
+    })
+  }
+
+  const handleTopicClick = (topicQuery) => {
+    history.push({
+      search: `?topic=${topicQuery || ''}`,
+      pathname: '/search/'
+    })
+  }
 
   const handleGroupCategories = () => {
     const groupedCategories = []
@@ -69,7 +84,7 @@ const CategoriesSelect = () => {
       <>
         <h4>{header}</h4>
         {options.map(option => (
-          <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
+          <ListItem onClick={() => handleCategoryClick(option)} key={Math.random()}>
             {option}
           </ListItem>
         ))}
@@ -98,12 +113,24 @@ const CategoriesSelect = () => {
             <div style={{margin: '1px 8px'}}>Semua Kategori</div>
             <ExpandMoreIcon/>
           </DropDownHeader>
-          <QuickButton>Peralatan Dapur</QuickButton>
-          <QuickButton>Peralatan Makan & Minum</QuickButton>
-          <QuickButton>Peralatan Masak</QuickButton>
-          <QuickButton>Elektronik Dapur</QuickButton>
-          <QuickButton>Ruang Makan</QuickButton>
-          <QuickButton>Penyimpanan Makanan</QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Peralatan Dapur')}>
+            Peralatan Dapur
+          </QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Peralatan Makan & Minum')}>
+            Peralatan Makan & Minum
+          </QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Peralatan Masak')}>
+            Peralatan Masak
+          </QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Elektronik Dapur')}>
+            Elektronik Dapur
+          </QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Ruang Makan')}>
+            Ruang Makan
+          </QuickButton>
+          <QuickButton onClick={() => handleTopicClick('Penyimpanan Makanan')}>
+            Penyimpanan Makanan
+          </QuickButton>
         </div>
         {isOpen && (
           <DropDownListContainer>

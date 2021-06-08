@@ -11,7 +11,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { formattedCurrency, formattedDescription } from '../../Constants/format';
-import { getAllJobs, getJobsByQueries, getProductsByQueries } from '../../firebase';
+import { getAllJobs, getAllProducts, getJobsByQueries, getProductsByQueries } from '../../firebase';
 import qs from 'query-string';
 import './SearchPage.css';
 import StarIcon from '@material-ui/icons/Star';
@@ -84,7 +84,7 @@ const SearchPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedItems = _.isEmpty(queries) ? 
-        await getAllJobs() : await getProductsByQueries(queries);
+        await getAllProducts() : await getProductsByQueries(queries);
       // const sortedItems = fetchedItems.sort((x,y) => {
       //   const sortByConditions = {
       //     'rating': y['jobRating']['rating'] - x['jobRating']['rating'],
