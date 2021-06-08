@@ -1,14 +1,18 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { firebaseConfig } from './env';
+import { firebaseConfig, supabaseConfig } from './env';
 import { getJobRatingByRatingList } from './Constants/rating';
+import { createClient } from '@supabase/supabase-js'
+
 var _ = require('lodash');
 
 firebase.initializeApp(firebaseConfig);
 const fireAuth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage().ref();
+
+const supabase = createClient(supabaseConfig.url, supabaseConfig.key)
 
 export const signUp = async (email, password, username) => {
   let userData = {};
@@ -195,6 +199,34 @@ export const getJobsByCurrentUserIdAndStatus = async (status) => {
     await getJobsByUserId(fetchedCurrentUser.user_id) :
     await getJobsByUserIdAndStatus(fetchedCurrentUser.user_id, status);
   return fetchedJobsByCurrentUser;
+}
+
+export const getProductsByQueries = async (queries) => {
+  const { query: searchString } = queries;
+  console.log('search:', searchString)
+  
+  let { data: priorityProducts } = await supabase
+  .from('products')
+  .select('*')
+  .ilike('title', `%${searchString}%`)
+  .not('image', 'is', null)
+
+  let { data: products } = await supabase
+  .from('products')
+  .select('*')
+  .ilike('title', `%${searchString}%`)
+  .is('image', null)
+
+  let allProducts = [...priorityProducts, ...products];
+  let groupedProducts = []
+
+  while (allProducts.length > 0) {
+    groupedProducts.push(allProducts.splice(0,20))
+  }
+
+  console.log(groupedProducts);
+
+  return groupedProducts;
 }
 
 export const getJobsByQueries = async (queries) => {

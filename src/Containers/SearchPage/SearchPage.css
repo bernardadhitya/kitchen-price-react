@@ -1,15 +1,31 @@
 .job-card{
-  margin: 30px;
+  margin: 15px;
   border-radius: 10px;
-  padding: 10px;
+  padding: 0;
   box-shadow: 0px 2px 9px 4px rgba(216,216,216,0.5);
   -webkit-box-shadow: 0px 2px 9px 4px rgba(216,216,216,0.5);
   -moz-box-shadow: 0px 2px 9px 4px rgba(216,216,216,0.5);
   cursor: pointer;
 }
 
-.job-card h3{
-  color: #3183CD;
+.job-content{
+  padding: 0 20px 20px 20px;
+}
+
+.job-card .job-title{
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.job-card .job-price{
+  font-weight: 650;
+  color: #57946C;
+  margin: 10px 0;
+}
+
+.job-card .job-rating{
+  display: flex;
+  align-items: center;
 }
 
 .job-card .image-thumbnail {
@@ -17,6 +33,12 @@
   max-height: 150px;
   object-fit: cover;
   border-radius: 10px;
+}
+
+.job-card .job-source {
+  width: 50%;
+  margin: 10px 0 0 0;
+  align-items: right;
 }
 
 .filter-button {

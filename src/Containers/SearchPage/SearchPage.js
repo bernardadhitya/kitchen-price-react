@@ -11,12 +11,14 @@ import {
 import React, {useState, useEffect} from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { formattedCurrency, formattedDescription } from '../../Constants/format';
-import { getAllJobs, getJobsByQueries } from '../../firebase';
+import { getAllJobs, getJobsByQueries, getProductsByQueries } from '../../firebase';
 import qs from 'query-string';
 import './SearchPage.css';
 import StarIcon from '@material-ui/icons/Star';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { withStyles } from '@material-ui/core/styles';
+import Pagination from '@material-ui/lab/Pagination';
+
 var _ = require('lodash');
 
 const useStyles = makeStyles((theme) => ({
@@ -73,6 +75,7 @@ const SearchPage = () => {
   const [items, setItems] = useState([]);
   const [sortBy, setSortBy] = useState('most-recent');
   const [openModal, setOpenModal] = useState(false);
+  const [page, setPage] = useState(1);
 
   const queries = qs.parse(location.search);
 
@@ -81,17 +84,17 @@ const SearchPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedItems = _.isEmpty(queries) ? 
-        await getAllJobs() : await getJobsByQueries(queries);
-      const sortedItems = fetchedItems.sort((x,y) => {
-        const sortByConditions = {
-          'rating': y['jobRating']['rating'] - x['jobRating']['rating'],
-          'most-recent': y['dateCreated'] - x['dateCreated'],
-          'lowest-fee': x['fee'] - y['fee'],
-          'highest-fee': y['fee'] - x['fee']
-        }
-        return sortByConditions[sortBy];
-      })
-      setItems(sortedItems);
+        await getAllJobs() : await getProductsByQueries(queries);
+      // const sortedItems = fetchedItems.sort((x,y) => {
+      //   const sortByConditions = {
+      //     'rating': y['jobRating']['rating'] - x['jobRating']['rating'],
+      //     'most-recent': y['dateCreated'] - x['dateCreated'],
+      //     'lowest-fee': x['fee'] - y['fee'],
+      //     'highest-fee': y['fee'] - x['fee']
+      //   }
+      //   return sortByConditions[sortBy];
+      // })
+      setItems(fetchedItems);
     }
     fetchData();
   }, [location, sortBy]);
@@ -150,33 +153,31 @@ const SearchPage = () => {
 
   const renderItemCard = (job) => {
     const {
-      job_id,
-      description,
-      fee,
+      product_id,
+      image,
       title,
-      provider,
-      location,
-      imageUrl,
-      ratings,
-      jobRating
+      url,
+      price,
+      source,
+      rating
     } = job;
-    const { name: providerName } = provider;
 
     return (
       <Grid item xs={3}>
-        <div className='job-card' onClick={() => handleClickItem(job_id)}>
+        <div className='job-card'>
           <img
-            src={imageUrl}
+            src={image}
             className='image-thumbnail'
             alt=''
             />
-          <h4>{title}</h4>
-          <h3>{formattedCurrency(fee)}</h3>
-          <p>{formattedDescription(description)}</p>
-          <h5>{providerName}</h5>
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <LocationOnIcon fontSize='small' color='primary'/>
-            <p>{location}</p>
+          <div className='job-content'>
+            <div className='job-title'>{title}</div>
+            <div className='job-rating'>
+              <StarIcon style={{color: '#FFC107'}}/>
+              {`${rating}/5`}
+            </div>
+            <div className='job-price'>{formattedCurrency(price)}</div>
+            <img className='job-source' src={require(`../../Assets/images/${source}.png`)} alt=''/>
           </div>
         </div>
       </Grid>
@@ -186,7 +187,7 @@ const SearchPage = () => {
   const renderItemCards = () => {
     return items.length > 0 ? (
       <Grid container>
-        { items.map(job => renderItemCard(job)) }
+        { items[page-1].map(item => renderItemCard(item)) }
       </Grid>
     ) : (
       <div style={{margin: '40px 0 0 40px'}}>
@@ -251,7 +252,7 @@ const SearchPage = () => {
 
 
   return (
-    <div style={{margin: '20px 40px'}}>
+    <div style={{margin: '20px 100px'}}>
       {
         !!searchQuery &&
         <h1 style={{margin: '140px 0 0 40px'}}>Pencarian untuk <span style={{color: '#3183CD'}}>{searchQuery}</span></h1>
@@ -270,6 +271,12 @@ const SearchPage = () => {
         </Grid>
       </Grid>
       {renderItemCards()}
+      <Pagination
+        count={Math.ceil(items.length)}
+        shape="rounded"
+        page={page}
+        onChange={(event, value) => setPage(value)}
+      />
       <Modal
         open={openModal}
         onClose={() => setOpenModal(false)}
