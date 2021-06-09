@@ -16,6 +16,7 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import SearchBar from '../SearchBar/SearchBar';
 import CategoriesSelect from '../CategoriesSelect/CategoriesSelect';
+import qs from 'query-string';
 
 const StyledMenu = withStyles({
   paper: {
@@ -178,7 +179,7 @@ const Navbar = () => {
 
   const handleSearch = (searchString) => {
     history.push({
-      search: `?query=${searchString}`,
+      search: `?query=${searchString.replace('&', '%26')}`,
       pathname: '/search/'
     });
   }

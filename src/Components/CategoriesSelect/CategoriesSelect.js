@@ -54,14 +54,14 @@ const CategoriesSelect = () => {
     console.log(selectedOption);
 
     history.push({
-      search: `?category=${categoryQuery || ''}`,
+      search: `?category=${categoryQuery.replace('&', '%26') || ''}`,
       pathname: '/search/'
     })
   }
 
   const handleTopicClick = (topicQuery) => {
     history.push({
-      search: `?topic=${topicQuery || ''}`,
+      search: `?topic=${topicQuery.replace || ''}`,
       pathname: '/search/'
     })
   }
