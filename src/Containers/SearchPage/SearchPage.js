@@ -18,6 +18,7 @@ import StarIcon from '@material-ui/icons/Star';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { withStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
+import FilterModal from '../../Components/FilterModal/FilterModal';
 
 var _ = require('lodash');
 
@@ -204,53 +205,6 @@ const SearchPage = () => {
     })
   }
 
-  const renderModalBody = () => {
-    let tempMinPrice = null;
-    let tempMaxPrice = null;
-    return (
-      <div className={classes.paper}>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <h4>Harga</h4>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              type="number"
-              label="Min Harga"
-              variant="outlined"
-              fullWidth
-              onChange={e => {tempMinPrice = e.target.value}}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              type="number"
-              label="Max Harga"
-              variant="outlined"
-              fullWidth
-              onChange={e => {tempMaxPrice = e.target.value}}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <div className='filter-submit-button'>
-              <h4
-                style={{
-                  cursor: 'pointer'
-                }}
-                onClick={() => {
-                  handleFilterByPrice(tempMinPrice, tempMaxPrice);
-                }}
-              >
-                Cari
-              </h4>
-            </div>
-          </Grid>
-        </Grid>
-      </div>
-    )
-  }
-
-
   return (
     <div style={{margin: '20px 100px'}}>
       {
@@ -282,7 +236,7 @@ const SearchPage = () => {
         onClose={() => setOpenModal(false)}
         className={classes.modal}
       >
-        {renderModalBody()}
+        <FilterModal handleFilterByPrice={handleFilterByPrice}/>
       </Modal>
     </div>
   )
