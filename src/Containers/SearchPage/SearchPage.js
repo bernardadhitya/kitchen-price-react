@@ -19,6 +19,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { withStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterModal from '../../Components/FilterModal/FilterModal';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 var _ = require('lodash');
 
@@ -113,41 +114,10 @@ const SearchPage = () => {
   }
 
   const renderSortByMenu = () => {
-    const sortByText = {
-      'rating': 'Rating Tertinggi',
-      'most-recent': 'Terbaru',
-      'lowest-fee': 'Harga Terendah',
-      'highest-fee': 'Harga Tertinggi'
-    }
     return (
-      <div>
-        <div className='filter-button' onClick={handleSortByClicked}>
-          <h5>{`Urutkan: ${sortByText[sortBy]}`}</h5>
-        </div>
-        <StyledMenu
-          id="customized-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <StyledMenuItem onClick={() => {setSortBy('most-recent'); handleClose()}}>
-            <ListItemText primary="Terbaru" />
-            <ListItemIcon/>
-          </StyledMenuItem>
-          <StyledMenuItem onClick={() => {setSortBy('lowest-fee'); handleClose()}}>
-            <ListItemText primary="Harga Terendah" />
-            <ListItemIcon/>
-          </StyledMenuItem>
-          <StyledMenuItem onClick={() => {setSortBy('highest-fee'); handleClose()}}>
-            <ListItemText primary="Harga Tertinggi" />
-            <ListItemIcon/>
-          </StyledMenuItem>
-          <StyledMenuItem onClick={() => {setSortBy('rating'); handleClose()}}>
-            <ListItemText primary="Rating Tertinggi" />
-            <ListItemIcon/>
-          </StyledMenuItem>
-        </StyledMenu>
+      <div className='filter-button' onClick={() => setOpenModal(true)}>
+        <FilterListIcon style={{marginRight: '8px', color: 'rgba(0,0,0,0.7)'}}/>
+        <p>Filter</p>
       </div>
     )
   }
@@ -212,12 +182,7 @@ const SearchPage = () => {
         <h1 style={{margin: '140px 0 0 40px'}}>Pencarian untuk <span style={{color: '#3183CD'}}>{searchQuery}</span></h1>
       }
       <Grid container>
-        <Grid item xs={3}>
-          <div className='filter-button' onClick={() => setOpenModal(true)}>
-            <h5>Harga</h5>
-          </div>
-        </Grid>
-        <Grid item xs={6}></Grid>
+        <Grid item xs={9}></Grid>
         <Grid item xs={3}>
           <div style={{float: 'right', marginRight: '30px'}}>
             {renderSortByMenu()}
@@ -225,12 +190,14 @@ const SearchPage = () => {
         </Grid>
       </Grid>
       {renderItemCards()}
-      <Pagination
-        count={Math.ceil(items.length)}
-        shape="rounded"
-        page={page}
-        onChange={(event, value) => setPage(value)}
-      />
+      <div className='pagination-container'>
+        <Pagination
+          count={Math.ceil(items.length)}
+          shape="rounded"
+          page={page}
+          onChange={(event, value) => setPage(value)}
+        />
+      </div>
       <Modal
         open={openModal}
         onClose={() => setOpenModal(false)}
