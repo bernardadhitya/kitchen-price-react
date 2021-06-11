@@ -50,14 +50,3 @@
   width: 200px;
   margin: 40px 0 0 40px;
 }
-
-.filter-submit-button {
-  background-color: #1A3E60;
-  color: #ffffff;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 10px;
-  width: 100px;
-  float: right;
-  margin-top: 10px;
-}

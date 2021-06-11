@@ -61,7 +61,7 @@ const CategoriesSelect = () => {
 
   const handleTopicClick = (topicQuery) => {
     history.push({
-      search: `?topic=${topicQuery.replace || ''}`,
+      search: `?topic=${topicQuery.replace('&', '%26') || ''}`,
       pathname: '/search/'
     })
   }
