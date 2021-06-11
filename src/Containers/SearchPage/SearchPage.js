@@ -20,6 +20,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterModal from '../../Components/FilterModal/FilterModal';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ItemCard from '../../Components/ItemCard/ItemCard';
 
 var _ = require('lodash');
 
@@ -31,42 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    borderRadius: '8px',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
 }));
-
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 const SearchPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -122,43 +92,21 @@ const SearchPage = () => {
     )
   }
 
-  const renderItemCard = (job) => {
-    const {
-      product_id,
-      image,
-      title,
-      url,
-      price,
-      source,
-      rating
-    } = job;
-
-    return (
-      <Grid item xs={3}>
-        <div className='job-card'>
-          <img
-            src={image}
-            className='image-thumbnail'
-            alt=''
-            />
-          <div className='job-content'>
-            <div className='job-title'>{title}</div>
-            <div className='job-rating'>
-              <StarIcon style={{color: '#FFC107'}}/>
-              {`${rating}/5`}
-            </div>
-            <div className='job-price'>{formattedCurrency(price)}</div>
-            <img className='job-source' src={require(`../../Assets/images/${source}.png`)} alt=''/>
-          </div>
-        </div>
-      </Grid>
-    )
-  }
-
   const renderItemCards = () => {
     return items.length > 0 ? (
       <Grid container>
-        { items[page-1].map(item => renderItemCard(item)) }
+        { items[page-1].map(item => {
+            const { image, title, price, source, rating } = item;
+            return (
+              <ItemCard
+                image={image}
+                title={title}
+                price={price}
+                source={source}
+                rating={rating}
+              />
+            )
+        })}
       </Grid>
     ) : (
       <div style={{margin: '40px 0 0 40px'}}>
