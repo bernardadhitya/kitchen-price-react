@@ -13,7 +13,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FilterModal = (props) => {
-  const { handleFilterByPrice } = props;
+  const {
+    handleMinPrice,
+    handleMaxPrice,
+    handleSelectedCategories,
+    handleSelectedMarketplaces,
+    handleSelectedRating,
+    handleCloseModal
+  } = props;
   const classes = useStyles();
 
   const [minPrice, setMinPrice] = useState(0);
@@ -190,12 +197,25 @@ const FilterModal = (props) => {
     )
   }
 
+  const handleSubmitFilter = () => {
+    handleMinPrice(minPrice);
+    handleMaxPrice(maxPrice);
+    handleSelectedCategories(selectedCategories);
+    handleSelectedMarketplaces(selectedMarketplaces);
+    handleSelectedRating(selectedRating);
+
+    handleCloseModal();
+  }
+
   const renderSubmitButton = () => {
     return (
       <Grid container>
         <Grid item xs={3}></Grid>
         <Grid item xs={6}>
-          <div className='filter-submit-button'>
+          <div
+            className='filter-submit-button'
+            onClick={() => handleSubmitFilter()}
+          >
             <h4>Cari</h4>
           </div>
         </Grid>

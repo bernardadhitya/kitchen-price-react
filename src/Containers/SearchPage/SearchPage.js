@@ -1,22 +1,13 @@
 import {
   Grid,
   makeStyles,
-  Modal,
-  TextField,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText
+  Modal
 } from '@material-ui/core';
 import React, {useState, useEffect} from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { formattedCurrency, formattedDescription } from '../../Constants/format';
-import { getAllJobs, getAllProducts, getJobsByQueries, getProductsByQueries } from '../../firebase';
+import { getAllProducts, getProductsByQueries } from '../../firebase';
 import qs from 'query-string';
 import './SearchPage.css';
-import StarIcon from '@material-ui/icons/Star';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { withStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterModal from '../../Components/FilterModal/FilterModal';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -39,15 +30,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchPage = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
 
   const [items, setItems] = useState([]);
-  const [sortBy, setSortBy] = useState('most-recent');
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(1);
+
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedMarketplaces, setSelectedMarketplaces] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(null);
 
   const queries = qs.parse(location.search);
 
@@ -57,31 +53,10 @@ const SearchPage = () => {
     const fetchData = async () => {
       const fetchedItems = _.isEmpty(queries) ? 
         await getAllProducts() : await getProductsByQueries(queries);
-      // const sortedItems = fetchedItems.sort((x,y) => {
-      //   const sortByConditions = {
-      //     'rating': y['jobRating']['rating'] - x['jobRating']['rating'],
-      //     'most-recent': y['dateCreated'] - x['dateCreated'],
-      //     'lowest-fee': x['fee'] - y['fee'],
-      //     'highest-fee': y['fee'] - x['fee']
-      //   }
-      //   return sortByConditions[sortBy];
-      // })
       setItems(fetchedItems);
     }
     fetchData();
-  }, [location, sortBy]);
-
-  const handleSortByClicked = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleClickItem = (job_id) => {
-    history.push(`/business/${job_id}`);
-  }
+  }, [location]);
 
   const renderSortByMenu = () => {
     return (
@@ -110,7 +85,7 @@ const SearchPage = () => {
       </Grid>
     ) : (
       <div style={{margin: '40px 0 0 40px'}}>
-        <h3>Tidak menemukan pekerjaan</h3>
+        <h3>Tidak menemukan barang yang anda cari</h3>
       </div>
     )
   }
@@ -151,7 +126,14 @@ const SearchPage = () => {
         onClose={() => setOpenModal(false)}
         className={classes.modal}
       >
-        <FilterModal handleFilterByPrice={handleFilterByPrice}/>
+        <FilterModal
+          handleMinPrice={setMinPrice}
+          handleMaxPrice={setMaxPrice}
+          handleSelectedCategories={setSelectedCategories}
+          handleSelectedMarketplaces={setSelectedMarketplaces}
+          handleSelectedRating={setSelectedRating}
+          handleCloseModal={() => setOpenModal(false)}
+        />
       </Modal>
     </div>
   )
