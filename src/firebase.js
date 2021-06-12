@@ -420,8 +420,9 @@ export const getSimilarProductsByProductId = async (productId) => {
         similarityScore: stringSimilarity.compareTwoStrings(currentProduct.title, product.title)
       }
     })
-    .filter(product => product.similarityScore >= 0.7)
+    // .filter(product => product.similarityScore >= 0.7)
     .sort((a, b) => b.similarityScore - a.similarityScore)
+    .slice(0,10)
 
   console.log(similarProducts);
   
