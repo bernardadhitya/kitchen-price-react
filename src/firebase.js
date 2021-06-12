@@ -423,6 +423,7 @@ export const getSimilarProductsByProductId = async (productId) => {
     // .filter(product => product.similarityScore >= 0.7)
     .sort((a, b) => b.similarityScore - a.similarityScore)
     .slice(0,10)
+    .sort((a,b) => a.product.price - b.product.price)
 
   console.log(similarProducts);
   
