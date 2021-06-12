@@ -116,3 +116,19 @@ export const categories = {
     'Meja Ruang Makan'
   ]
 }
+
+export const getAllCategories = () => {
+  let flattenCategories = []
+  Object.keys(categories).forEach(key =>
+    flattenCategories = [...flattenCategories, ...categories[key]]
+  )
+  return flattenCategories;
+}
+
+export const getCategoriesByTopics = (topics) => {
+  let flattenCategories = []
+  topics.forEach(topic =>
+    flattenCategories = [...flattenCategories, ...categories[topic]]
+  )
+  return flattenCategories;
+}

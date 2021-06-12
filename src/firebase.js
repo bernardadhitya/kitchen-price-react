@@ -4,7 +4,7 @@ import 'firebase/auth';
 import { firebaseConfig, supabaseConfig } from './env';
 import { getJobRatingByRatingList } from './Constants/rating';
 import { createClient } from '@supabase/supabase-js'
-import { categories } from './Constants/categories';
+import { getAllCategories, categories } from './Constants/categories';
 
 var _ = require('lodash');
 
@@ -202,16 +202,36 @@ export const getJobsByCurrentUserIdAndStatus = async (status) => {
   return fetchedJobsByCurrentUser;
 }
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (filters) => {
+  const {
+    minPrice,
+    maxPrice,
+    selectedCategories,
+    selectedMarketplaces,
+    selectedRating
+  } = filters;
+
+  console.log('filters:', filters);
+
   let { data: priorityProducts } = await supabase
   .from('products')
   .select('*')
   .not('image', 'is', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   let { data: products } = await supabase
   .from('products')
   .select('*')
   .is('image', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   let allProducts = [...priorityProducts, ...products];
   let groupedProducts = []
@@ -225,39 +245,83 @@ export const getAllProducts = async () => {
   return groupedProducts;
 }
 
-const getProductsByCategory = async (category) => {
+const getProductsByCategory = async (category, filters) => {
+  const {
+    minPrice,
+    maxPrice,
+    selectedCategories,
+    selectedMarketplaces,
+    selectedRating
+  } = filters;
+
   let { data: priorityProducts } = await supabase
   .from('products')
   .select('*')
   .eq('category', category)
   .not('image', 'is', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   let { data: products } = await supabase
   .from('products')
   .select('*')
   .eq('category', category)
   .is('image', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   return [...priorityProducts, ...products]
 }
 
-const getProductsByTitle = async (searchString) => {
+const getProductsByTitle = async (searchString, filters) => {
+  const {
+    minPrice,
+    maxPrice,
+    selectedCategories,
+    selectedMarketplaces,
+    selectedRating
+  } = filters;
+
   let { data: priorityProducts } = await supabase
   .from('products')
   .select('*')
   .ilike('title', `%${searchString}%`)
   .not('image', 'is', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   let { data: products } = await supabase
   .from('products')
   .select('*')
   .ilike('title', `%${searchString}%`)
   .is('image', null)
+  .gte('price', minPrice)
+  .lte('price', maxPrice)
+  .in('category', selectedCategories)
+  .in('source', selectedMarketplaces)
+  .gte('rating', selectedRating)
 
   return [...priorityProducts, ...products]
 }
 
-const getProductsByTopic = async (topic) => {
+const getProductsByTopic = async (topic, filters) => {
+  const {
+    minPrice,
+    maxPrice,
+    selectedCategories,
+    selectedMarketplaces,
+    selectedRating
+  } = filters;
+
   let allProducts = []
 
   const getAllPriorityProductsByTopic = async () => {
@@ -267,7 +331,12 @@ const getProductsByTopic = async (topic) => {
           .from('products')
           .select('*')
           .eq('category', category)
-          .not('image', 'is', null);
+          .not('image', 'is', null)
+          .gte('price', minPrice)
+          .lte('price', maxPrice)
+          .in('category', selectedCategories)
+          .in('source', selectedMarketplaces)
+          .gte('rating', selectedRating)
         allProducts.push(...data);
         return category
       })
@@ -282,6 +351,11 @@ const getProductsByTopic = async (topic) => {
           .select('*')
           .eq('category', category)
           .is('image', null)
+          .gte('price', minPrice)
+          .lte('price', maxPrice)
+          .in('category', selectedCategories)
+          .in('source', selectedMarketplaces)
+          .gte('rating', selectedRating)
         allProducts.push(...data);
         return category
       })
@@ -296,17 +370,17 @@ const getProductsByTopic = async (topic) => {
   return allProducts;
 }
 
-export const getProductsByQueries = async (queries) => {
+export const getProductsByQueries = async (queries, filters) => {
   const { query: searchString, category = '', topic } = queries;
   
   let allProducts = []
 
   if (!!topic) {
     console.log('called');
-    allProducts = await getProductsByTopic(topic);
+    allProducts = await getProductsByTopic(topic, filters);
   } else {
-    const productsByCategory = await getProductsByCategory(category);
-    const productByTitle = await getProductsByTitle(searchString);
+    const productsByCategory = await getProductsByCategory(category, filters);
+    const productByTitle = await getProductsByTitle(searchString, filters);
     allProducts = [...productByTitle, ...productsByCategory];
   }
 

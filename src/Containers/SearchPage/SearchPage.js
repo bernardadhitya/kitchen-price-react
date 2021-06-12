@@ -12,6 +12,8 @@ import Pagination from '@material-ui/lab/Pagination';
 import FilterModal from '../../Components/FilterModal/FilterModal';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ItemCard from '../../Components/ItemCard/ItemCard';
+import { getAllCategories, getCategoriesByTopics } from '../../Constants/categories';
+import { allMarketplaces } from '../../Constants/marketplaces';
 
 var _ = require('lodash');
 
@@ -37,13 +39,12 @@ const SearchPage = () => {
   const [items, setItems] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(1);
-
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(0);
-
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMarketplaces, setSelectedMarketplaces] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
+  const [refresh, setRefresh] = useState(0);
 
   const queries = qs.parse(location.search);
 
@@ -51,12 +52,29 @@ const SearchPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const filters = {
+        minPrice: !!minPrice ? minPrice : 0,
+        maxPrice: !!maxPrice ? maxPrice : Math.pow(10, 10),
+        selectedCategories:
+          !_.isEmpty(selectedCategories) ? getCategoriesByTopics(selectedCategories) : getAllCategories(),
+        selectedMarketplaces:
+          !_.isEmpty(selectedMarketplaces) ? selectedMarketplaces : allMarketplaces,
+        selectedRating: !!selectedRating ? selectedRating : 0
+      };
+
       const fetchedItems = _.isEmpty(queries) ? 
-        await getAllProducts() : await getProductsByQueries(queries);
+        await getAllProducts(filters) : await getProductsByQueries(queries, filters);
+
       setItems(fetchedItems);
     }
     fetchData();
-  }, [location]);
+  }, [location, refresh]);
+
+  console.log('minPrice:',minPrice)  
+  console.log('maxPrice:',maxPrice)
+  console.log('selectedCategories:', selectedCategories)
+  console.log('selectedMarketplaces:', selectedMarketplaces)
+  console.log('selectedRating:', selectedRating)  
 
   const renderSortByMenu = () => {
     return (
@@ -132,7 +150,7 @@ const SearchPage = () => {
           handleSelectedCategories={setSelectedCategories}
           handleSelectedMarketplaces={setSelectedMarketplaces}
           handleSelectedRating={setSelectedRating}
-          handleCloseModal={() => setOpenModal(false)}
+          handleCloseModal={() => {setOpenModal(false); setRefresh(refresh + 1)}}
         />
       </Modal>
     </div>
