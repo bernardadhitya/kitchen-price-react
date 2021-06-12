@@ -89,7 +89,7 @@ const SearchPage = () => {
     return items.length > 0 ? (
       <Grid container>
         { items[page-1].map(item => {
-            const { image, title, price, source, rating } = item;
+            const { product_id, image, title, price, source, rating } = item;
             return (
               <ItemCard
                 image={image}
@@ -97,6 +97,7 @@ const SearchPage = () => {
                 price={price}
                 source={source}
                 rating={rating}
+                productId={product_id}
               />
             )
         })}

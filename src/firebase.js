@@ -5,6 +5,8 @@ import { firebaseConfig, supabaseConfig } from './env';
 import { getJobRatingByRatingList } from './Constants/rating';
 import { createClient } from '@supabase/supabase-js'
 import { getAllCategories, categories } from './Constants/categories';
+import { allMarketplaces } from './Constants/marketplaces';
+import stringSimilarity from 'string-similarity';
 
 var _ = require('lodash');
 
@@ -393,6 +395,45 @@ export const getProductsByQueries = async (queries, filters) => {
   console.log(groupedProducts);
 
   return groupedProducts;
+}
+
+export const getProductById = async (productId) => {
+  let { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('product_id', productId);
+
+  return data[0];
+}
+
+export const getSimilarProductsByProductId = async (productId) => {
+  const currentProduct = await getProductById(productId);
+  const productsByCategory = await getProductsByCategory(currentProduct.category, defaultFilter);
+
+  console.log(currentProduct);
+  console.log(productsByCategory);
+
+  const similarProducts = productsByCategory
+    .map(product => {
+      return {
+        product,
+        similarityScore: stringSimilarity.compareTwoStrings(currentProduct.title, product.title)
+      }
+    })
+    .filter(product => product.similarityScore >= 0.7)
+    .sort((a, b) => b.similarityScore - a.similarityScore)
+
+  console.log(similarProducts);
+  
+  return similarProducts;
+}
+
+const defaultFilter = {
+  minPrice: 0,
+  maxPrice: Math.pow(10,10),
+  selectedCategories: getAllCategories(),
+  selectedMarketplaces: allMarketplaces,
+  selectedRating: 0
 }
 
 export const getJobsByQueries = async (queries) => {

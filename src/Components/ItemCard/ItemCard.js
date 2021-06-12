@@ -3,6 +3,7 @@ import React from 'react';
 import { formattedCurrency } from '../../Constants/format';
 import StarIcon from '@material-ui/icons/Star';
 import './ItemCard.css';
+import { useHistory } from 'react-router-dom';
 
 const ItemCard = (props) => {
   const {
@@ -10,12 +11,15 @@ const ItemCard = (props) => {
     title,
     price,
     source,
-    rating
+    rating,
+    productId
   } = props;
+
+  const history = useHistory();
 
   return (
     <Grid item xs={3}>
-      <div className='item-card'>
+      <div className='item-card' onClick={() => history.push(`/${productId}`)}>
         <div className='item-image'>
           <img
             src={image || require('../../Assets/images/logo-bw.png')}
