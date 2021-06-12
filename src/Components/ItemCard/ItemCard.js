@@ -16,11 +16,13 @@ const ItemCard = (props) => {
   return (
     <Grid item xs={3}>
       <div className='item-card'>
-        <img
-          src={image}
-          className='image-thumbnail'
-          alt=''
+        <div className='item-image'>
+          <img
+            src={image || require('../../Assets/images/logo-bw.png')}
+            className={image ? 'image-thumbnail' : 'image-thumbnail-empty'}
+            alt=''
           />
+        </div>
         <div className='item-content'>
           <div className='item-title'>{title}</div>
           <div className='item-rating'>
