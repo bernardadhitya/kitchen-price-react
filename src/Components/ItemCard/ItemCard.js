@@ -4,6 +4,7 @@ import { formattedCurrency } from '../../Constants/format';
 import StarIcon from '@material-ui/icons/Star';
 import './ItemCard.css';
 import { useHistory } from 'react-router-dom';
+import { addUserSearchHistory } from '../../firebase';
 
 const ItemCard = (props) => {
   const {
@@ -17,9 +18,14 @@ const ItemCard = (props) => {
 
   const history = useHistory();
 
+  const handleClick = async () => {
+    await addUserSearchHistory(productId);
+    history.push(`/${productId}`);
+  }
+
   return (
     <Grid item xs={3}>
-      <div className='item-card' onClick={() => history.push(`/${productId}`)}>
+      <div className='item-card' onClick={() => handleClick()}>
         <div className='item-image'>
           <img
             src={image || require('../../Assets/images/logo-bw.png')}

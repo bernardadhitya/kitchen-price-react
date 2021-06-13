@@ -60,7 +60,7 @@ export const getUserByEmail = async (email) => {
 }
 
 export const createUser = async (userData) => {
-  const user = await db.collection('users').add(userData);
+  const user = await db.collection('users').add({ ...userData, history: []});
   await db.collection('wishlists').doc(user.id).set({user_id: user.id, wishlist: []});
   return user;
 }
@@ -73,8 +73,6 @@ export const getAllProducts = async (filters) => {
     selectedMarketplaces,
     selectedRating
   } = filters;
-
-  console.log('filters:', filters);
 
   let { data: priorityProducts } = await supabase
   .from('products')
@@ -102,8 +100,6 @@ export const getAllProducts = async (filters) => {
   while (allProducts.length > 0) {
     groupedProducts.push(allProducts.splice(0,20))
   }
-
-  console.log(groupedProducts);
 
   return groupedProducts;
 }
@@ -228,8 +224,6 @@ const getProductsByTopic = async (topic, filters) => {
   await getAllPriorityProductsByTopic();
   await getAllProductsByTopic();
 
-  console.log(allProducts);
-
   return allProducts;
 }
 
@@ -239,7 +233,6 @@ export const getProductsByQueries = async (queries, filters) => {
   let allProducts = []
 
   if (!!topic) {
-    console.log('called');
     allProducts = await getProductsByTopic(topic, filters);
   } else {
     const productsByCategory = await getProductsByCategory(category, filters);
@@ -252,8 +245,6 @@ export const getProductsByQueries = async (queries, filters) => {
   while (allProducts.length > 0) {
     groupedProducts.push(allProducts.splice(0,20))
   }
-
-  console.log(groupedProducts);
 
   return groupedProducts;
 }
@@ -271,9 +262,6 @@ export const getSimilarProductsByProductId = async (productId) => {
   const currentProduct = await getProductById(productId);
   const productsByCategory = await getProductsByCategory(currentProduct.category, defaultFilter);
 
-  console.log(currentProduct);
-  console.log(productsByCategory);
-
   const similarProducts = productsByCategory
     .map(product => {
       return {
@@ -285,8 +273,6 @@ export const getSimilarProductsByProductId = async (productId) => {
     .sort((a, b) => b.similarityScore - a.similarityScore)
     .slice(0,10)
     .sort((a,b) => a.product.price - b.product.price)
-
-  console.log(similarProducts);
   
   return similarProducts;
 }
@@ -381,7 +367,47 @@ export const getNews = async () => {
 
   const articles = data.articles
 
-  console.log(articles)
-
   return articles;
+}
+
+export const getUserSearchHistory = async () => {
+  try {
+    const currentUser = await fetchCurrentUser();
+    const response = await db.collection('users').doc(currentUser.user_id).get();
+    const responseData = response.data();
+    return responseData.history;
+  } catch (error) {
+    return []
+  } 
+}
+
+export const addUserSearchHistory = async (productId) => {
+  try {
+    const product = await getProductById(productId)
+    const currentUser = await fetchCurrentUser();
+    const currentUserHistory = await getUserSearchHistory();
+    await db.collection('users').doc(currentUser.user_id).update({
+      history: [
+        product,
+        ...currentUserHistory
+      ]
+    })
+  } catch (error) {
+    return;
+  }
+}
+
+export const getRecommendedProducts = async () => {
+  try {
+    const currentUserSearchHistory = await getUserSearchHistory();
+    const recentSearchedProduct = currentUserSearchHistory[0];
+    const recentSearchedProductId = recentSearchedProduct.product_id;
+    console.log('recentSearchedProductId',recentSearchedProductId)
+    const recommendedProducts = await getSimilarProductsByProductId(recentSearchedProductId);
+    console.log('recommendedProducts',recommendedProducts)
+    return recommendedProducts.map(product => product.product).splice(0,4);
+  } catch(error) {
+    const allProducts = await getAllProducts(defaultFilter);
+    return allProducts[0].splice(0,4);
+  }
 }

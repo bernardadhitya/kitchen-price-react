@@ -1,15 +1,19 @@
 import { Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getNews } from '../../firebase';
+import ItemCard from '../../Components/ItemCard/ItemCard';
+import { getNews, getRecommendedProducts } from '../../firebase';
 import './HomePage.css';
 
 const HomePage = () => {
 
+  const [items, setItems] = useState([]);
   const [news, setNews] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      const fetchedItems = await getRecommendedProducts();
       const fetchedNews = await getNews();
+      setItems(fetchedItems);
       setNews(fetchedNews);
     }
     fetchData();
@@ -43,6 +47,23 @@ const HomePage = () => {
     if (news.length === 0) return;
     return news.splice(0,4).map(article => renderNewsCard(article));
   }
+
+  const renderRecommendedItemCards = () => {
+    if (items.length === 0) return;
+    return items.map(item => {
+      const { image, title, price, source, rating, product_id} = item;
+      return (
+        <ItemCard
+          image={image}
+          title={title}
+          price={price}
+          source={source}
+          rating={rating}
+          productId={product_id}
+        />
+      )
+    })
+  }
   
   return (
     <div className='home-page-wrapper'>
@@ -63,8 +84,14 @@ const HomePage = () => {
           <p>Cari Sekarang</p>
         </div>
       </div>
-      <div style={{textAlign: 'center', margin: '40px'}}>
-        <h1>Berita dan Artikel</h1>
+      <div style={{margin: '40px'}}>
+        <h1 style={{textAlign: 'center'}}>Rekomendasi untuk Anda</h1>
+        <Grid container>
+          {renderRecommendedItemCards()}
+        </Grid>
+      </div>
+      <div style={{margin: '40px'}}>
+        <h1 style={{textAlign: 'center'}}>Berita dan Artikel</h1>
         <Grid container>
           {renderNewsCards()}
         </Grid>
