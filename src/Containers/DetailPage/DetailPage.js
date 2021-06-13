@@ -1,27 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getProductById, getSimilarProductsByProductId } from '../../firebase';
+import { addToWishlist, getProductById, getSimilarProductsByProductId, getWishlistByCurrentUserId, removeFromWishlist } from '../../firebase';
 import './DetailPage.css';
 import StarIcon from '@material-ui/icons/Star';
-import { Grid } from '@material-ui/core';
+import { Grid, Snackbar } from '@material-ui/core';
 import { formattedCurrency } from '../../Constants/format';
 import IconPrice from '../../Assets/icons/IconPrice';
+import { Favorite, FavoriteBorder } from '@material-ui/icons';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const DetailPage = () => {
   const { id } = useParams();
 
   const [item, setItem] = useState(null);
   const [similarItems, setSimilarItems] = useState([]);
+  const [inWishlist, setInWishlist] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      const currentUserWishlist = await getWishlistByCurrentUserId();
       const fetchedItem = await getProductById(id);
       const fetchedSimilarItems = await getSimilarProductsByProductId(id);
+      setInWishlist(currentUserWishlist.wishlist.includes(parseInt(id)));
       setItem(fetchedItem);
       setSimilarItems(fetchedSimilarItems);
     }
     fetchData();
-  }, []);
+  }, [refresh]);
+
+  const handleAddOrRemoveWishlist = async () => {
+    if (!inWishlist){
+      await addToWishlist(id);
+      setSeverity('success');
+      setMessage('Pekerjaan ini sudah masuk ke wishlist anda');
+    } else {
+      await removeFromWishlist(id);
+      setSeverity('error');
+      setMessage('Pekerjaan ini sudah dihapus dari wishlist anda');
+    }
+    setOpenSnackbar(true);
+    setRefresh(refresh + 1);
+  }
+
+  const Alert = (props) => {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const renderSimilarProducts = () => {
     return similarItems.map(similarItem => {
@@ -94,10 +122,10 @@ const DetailPage = () => {
                   {`${formattedCurrency(similarItems[0].product.price)} - ${formattedCurrency(similarItems[similarItems.length - 1].product.price)}`}
                 </div>
               </div>
-              <p style={{marginRight: '36px'}}>
+              <p style={{paddingRight: '48px'}}>
                 {`${item.title} dijual dengan harga ${item.price} di ${item.source}. Ada ${similarItems.length} barang yang serupa dengan barang yang anda cari, di ${[...new Set(similarItems.map(similarItem => similarItem.product.source))].length} marketplace yang berbeda.`}
               </p>
-              <p style={{marginRight: '36px'}}>
+              <p style={{paddingRight: '48px'}}>
                 Silahkan melihat lebih lanjut untuk mendapatkan penawaran menarik. 
               </p>
             </Grid>
@@ -122,11 +150,19 @@ const DetailPage = () => {
                     }
                   </div>
                   <div className='similar-item-price'>{formattedCurrency(item.price)}</div>
-                  <a href={item.url}>
-                    <div className='similar-item-redirect-button'>
-                      <h4>Cek Sekarang</h4>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <a href={item.url} style={{width: '85%'}}>
+                      <div className='similar-item-redirect-button'>
+                        <h4>Cek Sekarang</h4>
+                      </div>
+                    </a>
+                    <div className='heart-wrapper' onClick={() => handleAddOrRemoveWishlist()}>
+                      { inWishlist ? 
+                        <Favorite fontSize='large' color='error'/>
+                        : <FavoriteBorder fontSize='large' color='error'/>
+                      }
                     </div>
-                  </a>
+                  </div>
                 </div>
               </div>
             </Grid>
@@ -136,11 +172,30 @@ const DetailPage = () => {
     )
   }
 
+  const renderSnackbar = () => {
+    return (
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity={severity}>
+          {message}
+        </Alert>
+      </Snackbar>
+    )
+  }
+
   return (
     <>
       {renderItemDetails()}
       <h4 style={{margin: '40px 80px'}}>Bandingkan Penawaran Lain</h4>
       {renderSimilarProducts()}
+      {renderSnackbar()}
     </>
   )
 

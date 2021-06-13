@@ -2,54 +2,41 @@ import { Grid } from '@material-ui/core';
 import React, {useState, useEffect} from 'react';
 import { useHistory } from 'react-router';
 import IconEmpty from '../../Assets/icons/IconEmpty';
+import ItemCard from '../../Components/ItemCard/ItemCard';
 import { formattedCurrency, formattedDescription } from '../../Constants/format';
-import { getAllJobsInWishlist } from '../../firebase';
+import { getAllProductsInWishlist } from '../../firebase';
 import './WishlistPage.css';
 
 const WishlistPage = () => {
   const history = useHistory();
 
-  const [jobs, setJobs] = useState([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedJobs = await getAllJobsInWishlist();
-      setJobs(fetchedJobs);
+      const feetchedItems = await getAllProductsInWishlist();
+      setItems(feetchedItems);
     }
     fetchData();
   }, []);
 
-  const handleClickJob = (job_id) => {
-    history.push(`/business/${job_id}`);
-  }
-
-  const renderJobCard = (job) => {
-    const { job_id, description, fee, title, provider, location, imageUrl } = job;
-    const { name: providerName } = provider;
-
-    return (
-      <Grid item xs={3}>
-        <div className='job-card' onClick={() => handleClickJob(job_id)}>
-          <img
-            src={imageUrl}
-            className='image-thumbnail'
-            alt=''
-            />
-          <h4>{title}</h4>
-          <h3>{formattedCurrency(fee)}</h3>
-          <p>{formattedDescription(description)}</p>
-          <h5>{providerName}</h5>
-          <p>{location}</p>
-        </div>
-      </Grid>
-    )
-  }
-
   const renderJobCards = () => {
-    return jobs.length > 0 ? (
-      <Grid container>
-        { jobs.map(job => renderJobCard(job)) }
-      </Grid>
+    return items.length > 0 ? (
+      <div style={{margin: '0 30px'}}>
+        <Grid container>
+          { items.map(item => {
+              const { image, title, price, source, rating, product_id } = item;
+              return <ItemCard
+                image={image}
+                title={title}
+                price={price}
+                source={source}
+                rating={rating}
+                productId={product_id}
+              />
+          }) }
+        </Grid>
+      </div>
     ) : (
       <h3 style={{marginLeft: '40px'}}>No data</h3>
     )
@@ -57,9 +44,9 @@ const WishlistPage = () => {
 
   return (
     <div style={{margin: '20px 40px'}}>
-      <h1 style={{margin: '140px 0 0 40px'}}>Favorit</h1>
+      <h1 style={{margin: '160px 0 40px 40px'}}>Wishlist</h1>
       { 
-        jobs.length > 0 ? 
+        items.length > 0 ? 
           renderJobCards() :
           <div style={{
             marginTop: '120px',
