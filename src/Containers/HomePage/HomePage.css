@@ -1,0 +1,22 @@
+.home-page-wrapper {
+  margin: 120px 0 0 0;
+}
+
+.home-banner-wrapper {
+  background-image: url('../../Assets/images/home-banner.png');
+  width: 100%;
+  padding: 150px 40px;
+}
+
+.home-redirect-button {
+  width: 150px;
+  margin: 20px 8px 4px 8px;
+  border-radius: 10px;
+  background-color: #57946C;
+  color: #ffffff;
+  border: 1px solid #57946C;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

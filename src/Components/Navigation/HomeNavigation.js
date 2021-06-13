@@ -7,6 +7,7 @@ import DetailPage from '../../Containers/DetailPage/DetailPage';
 import WishlistPage from '../../Containers/BusinessWishlishPage/WishlistPage';
 import PublicRoute from './PublicRoute';
 import Register from '../../Containers/Register/Register';
+import HomePage from '../../Containers/HomePage/HomePage';
 
 const DummyPage = () => {
   return <>
@@ -26,7 +27,7 @@ const HomeNavigation = () => {
   return (
     <Switch>
       <Route exact path='/'><Redirect to='/home'/></Route>
-      <PublicRoute path='/home' component={SearchPage}/>
+      <PublicRoute path='/home' component={HomePage}/>
       <PublicRoute path='/search' component={SearchPage}/>
       <PublicRoute path='/login' component={Login}/>
       <PublicRoute path='/register' component={Register}/>
