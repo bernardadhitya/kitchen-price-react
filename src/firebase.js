@@ -1,12 +1,13 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { firebaseConfig, supabaseConfig } from './env';
+import { firebaseConfig, newsApiConfig, supabaseConfig } from './env';
 import { getJobRatingByRatingList } from './Constants/rating';
 import { createClient } from '@supabase/supabase-js'
 import { getAllCategories, categories } from './Constants/categories';
 import { allMarketplaces } from './Constants/marketplaces';
 import stringSimilarity from 'string-similarity';
+import axios from 'axios';
 
 var _ = require('lodash');
 
@@ -371,4 +372,16 @@ export const removeFromWishlist = async (productId) => {
     wishlist: tempWishlist
   });
   return newWishlist;
+}
+
+export const getNews = async () => {
+  const url = `https://newsapi.org/v2/everything?q=cooking&apiKey=${newsApiConfig.key}&sortBy=popularity`
+  const response = await axios.get(url)
+  const data = response.data
+
+  const articles = data.articles
+
+  console.log(articles)
+
+  return articles;
 }

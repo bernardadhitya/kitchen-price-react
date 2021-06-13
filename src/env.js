@@ -12,4 +12,8 @@ const supabaseConfig = {
   key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjIzMTM1MTAzLCJleHAiOjE5Mzg3MTExMDN9.47AxP5lb7ijpaC6p006psBBv8NmYdb2jYmM7Zj8c35U'
 }
 
-export { firebaseConfig, supabaseConfig };
+const newsApiConfig = {
+  key: 'b90d874229d74212b87711367dff21bf'
+}
+
+export { firebaseConfig, supabaseConfig, newsApiConfig };

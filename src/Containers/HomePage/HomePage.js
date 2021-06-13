@@ -1,27 +1,47 @@
 import { Grid } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getNews } from '../../firebase';
 import './HomePage.css';
 
 const HomePage = () => {
 
-  const renderNewsCard = () => {
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedNews = await getNews();
+      setNews(fetchedNews);
+    }
+    fetchData();
+  }, []);
+
+  const renderNewsCard = (article) => {
+    const { title, url, description, urlToImage, source: { name: sourceName } } = article;
     return (
       <Grid item xs={3}>
-        <div className='news-card'>
-          <div className='news-image'>
-            <img
-              src={require('../../Assets/images/logo-bw.png')}
-              className={'news-thumbnail-empty'}
-              alt=''
-            />
+        <a style={{textDecoration: 'none', color: '#000000'}} href={url}>
+          <div className='news-card'>
+            <div className='news-image'>
+              <img
+                src={urlToImage || require('../../Assets/images/logo-bw.png')}
+                className={urlToImage ? 'news-thumbnail' : 'news-thumbnail-empty'}
+                alt=''
+              />
+            </div>
+            <div className='news-content'>
+              <div className='news-title'>{title}</div>
+              <p>{description}</p>
+              <p>By <span style={{color: '#57946C'}}>{sourceName}</span></p>
+            </div>
           </div>
-          <div className='news-content'>
-            <div className='news-title'>Lorem Ipsum</div>
-            <p>Ex duis laboris excepteur duis labore ipsum id commodo et consequat ad Lorem id dolore. Nostrud ipsum ut consequat duis nostrud eiusmod Lorem non exercitation adipisicing proident adipisicing proident. Labore reprehenderit qui exercitation duis duis nisi nulla occaecat pariatur cillum. Nostrud ullamco duis reprehenderit in qui amet qui.</p>
-          </div>
-        </div>
+        </a>
       </Grid>
     )
+  }
+
+  const renderNewsCards = () => {
+    if (news.length === 0) return;
+    return news.splice(0,4).map(article => renderNewsCard(article));
   }
   
   return (
@@ -46,10 +66,7 @@ const HomePage = () => {
       <div style={{textAlign: 'center', margin: '40px'}}>
         <h1>Berita dan Artikel</h1>
         <Grid container>
-          {renderNewsCard()}
-          {renderNewsCard()}
-          {renderNewsCard()}
-          {renderNewsCard()}
+          {renderNewsCards()}
         </Grid>
       </div>
     </div>
