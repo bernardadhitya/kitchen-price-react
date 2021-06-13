@@ -119,12 +119,15 @@ const SearchPage = () => {
 
   return (
     <div style={{margin: '20px 100px'}}>
-      {
-        !!searchQuery &&
-        <h1 style={{margin: '140px 0 0 40px'}}>Pencarian untuk <span style={{color: '#3183CD'}}>{searchQuery}</span></h1>
-      }
       <Grid container>
-        <Grid item xs={9}></Grid>
+        <Grid item xs={9}>
+          {
+            !!searchQuery &&
+            <p style={{margin: '60px 0 0 20px'}}>
+              Menampilkan hasil pencarian untuk <span style={{color: '#57946C'}}>{`"${searchQuery}"`}</span>
+            </p>
+          }
+        </Grid>
         <Grid item xs={3}>
           <div style={{float: 'right', marginRight: '30px'}}>
             {renderSortByMenu()}
