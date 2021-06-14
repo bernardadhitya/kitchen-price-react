@@ -55,10 +55,14 @@ const WishlistPage = () => {
             paddingLeft: '30%',
             paddingRight: '30%',
           }}>
-            <IconEmpty/>
+            <img
+              src={require('../../Assets/images/logo-big-empty.png')}
+              style={{height: '250px'}}
+              alt=''
+            />
             <div style={{height: '20px'}}></div>
             <p>
-            Anda belum menandai pekerjaan favorit anda. 
+            Anda belum menandai produk favorit anda. 
             </p>
           </div>
       }
