@@ -58,41 +58,34 @@ const DetailPage = () => {
         <div className='similar-item-wrapper'>
           <Grid container>
             <Grid item xs={5}>
-              <div className='center-wrapper'>
-                <img
-                  src={require(`../../Assets/images/${product.source}.png`)}
-                  style={{height:'30px'}}
-                  alt=''
-                />
-                <div className='similar-item-title'>{product.title}</div>
+              <img
+                src={require(`../../Assets/images/${product.source}.png`)}
+                style={{height:'30px'}}
+                alt=''
+              />
+              <div style={{height: '10px'}}></div>
+              {product.title}
+            </Grid>
+            <Grid item xs={2}>
+              <div>{product.category}</div>
+              <div className='similar-item-rating'>
+                {
+                  product.rating !== 0 ? <>
+                    <StarIcon style={{color: '#FFC107'}}/>
+                    {`${product.rating}/5`}
+                    </>: null
+                }
               </div>
             </Grid>
             <Grid item xs={2}>
-              <div className='center-wrapper'>
-                <div>{product.category}</div>
-                <div className='similar-item-rating'>
-                  {
-                    product.rating !== 0 ? <>
-                      <StarIcon style={{color: '#FFC107'}}/>
-                      {`${product.rating}/5`}
-                      </>: null
-                  }
-                </div>
-              </div>
-            </Grid>
-            <Grid item xs={2}>
-              <div className='center-wrapper'>
-                <div className='similar-item-price'>{formattedCurrency(product.price)}</div>
-              </div>
+              <div className='similar-item-price'>{formattedCurrency(product.price)}</div>
             </Grid>
             <Grid item xs={3}>
-              <div className='center-wrapper'>
-                <a href={product.url}>
-                  <div className='similar-item-redirect-button'>
-                    <h4>Cek Sekarang</h4>
-                  </div>
-                </a>
-              </div>
+              <a href={product.url}>
+                <div className='similar-item-redirect-button'>
+                  <h4>Cek Sekarang</h4>
+                </div>
+              </a>
             </Grid>
           </Grid>
         </div>
@@ -156,6 +149,7 @@ const DetailPage = () => {
                         <h4>Cek Sekarang</h4>
                       </div>
                     </a>
+                    <div style={{width: '10px'}}></div>
                     <div className='heart-wrapper' onClick={() => handleAddOrRemoveWishlist()}>
                       { inWishlist ? 
                         <Favorite fontSize='large' color='error'/>
