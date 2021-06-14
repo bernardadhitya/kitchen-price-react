@@ -1,5 +1,5 @@
 import { Grid, makeStyles, TextField } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import StarIcon from '@material-ui/icons/Star';
 import './FilterModal.css';
 import { categories } from '../../Constants/categories';

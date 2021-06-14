@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { addToWishlist, getProductById, getSimilarProductsByProductId, getWishlistByCurrentUserId, removeFromWishlist, fetchCurrentUser } from '../../firebase';
+import {
+  addToWishlist,
+  getProductById,
+  getSimilarProductsByProductId,
+  getWishlistByCurrentUserId,
+  removeFromWishlist,
+  fetchCurrentUser
+} from '../../firebase';
 import './DetailPage.css';
 import StarIcon from '@material-ui/icons/Star';
 import { Grid, Snackbar } from '@material-ui/core';

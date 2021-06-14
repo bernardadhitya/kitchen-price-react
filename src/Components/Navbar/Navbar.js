@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import './Navbar.css';
 import logo from '../../Assets/images/logo.png'
-import { Grid, TextField } from '@material-ui/core';
-import { useHistory, useLocation } from 'react-router-dom';
 import {
+  Grid,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText
 } from '@material-ui/core';
+import { useHistory, useLocation } from 'react-router-dom';
 import { fetchCurrentUser, signOut } from '../../firebase';
-import { AccountCircleOutlined, AccountCircleTwoTone } from '@material-ui/icons';
+import { AccountCircleTwoTone } from '@material-ui/icons';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import SearchBar from '../SearchBar/SearchBar';
 import CategoriesSelect from '../CategoriesSelect/CategoriesSelect';
-import qs from 'query-string';
 
 const StyledMenu = withStyles({
   paper: {

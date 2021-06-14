@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Register.css';
 import { Grid, TextField } from '@material-ui/core';
 import { signUp } from '../../firebase';
-import { useHistory } from "react-router-dom"
+import { useHistory } from 'react-router-dom';
 import { fetchCurrentUser } from '../../firebase';
 
 const Register = () => {

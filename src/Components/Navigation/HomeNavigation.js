@@ -9,12 +9,6 @@ import PublicRoute from './PublicRoute';
 import Register from '../../Containers/Register/Register';
 import HomePage from '../../Containers/HomePage/HomePage';
 
-const DummyPage = () => {
-  return <>
-    <h1>This is a dummy page</h1>
-  </>
-}
-
 const UserNavigation = ({match}) => {
   return (
     <Switch>

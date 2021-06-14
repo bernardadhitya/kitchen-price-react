@@ -1,15 +1,10 @@
 import { Grid } from '@material-ui/core';
 import React, {useState, useEffect} from 'react';
-import { useHistory } from 'react-router';
-import IconEmpty from '../../Assets/icons/IconEmpty';
 import ItemCard from '../../Components/ItemCard/ItemCard';
-import { formattedCurrency, formattedDescription } from '../../Constants/format';
 import { getAllProductsInWishlist } from '../../firebase';
 import './WishlistPage.css';
 
 const WishlistPage = () => {
-  const history = useHistory();
-
   const [items, setItems] = useState([]);
 
   useEffect(() => {

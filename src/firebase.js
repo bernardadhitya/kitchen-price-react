@@ -8,8 +8,6 @@ import { allMarketplaces } from './Constants/marketplaces';
 import stringSimilarity from 'string-similarity';
 import axios from 'axios';
 
-var _ = require('lodash');
-
 firebase.initializeApp(firebaseConfig);
 const fireAuth = firebase.auth();
 const db = firebase.firestore();
