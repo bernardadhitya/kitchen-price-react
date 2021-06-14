@@ -4,7 +4,7 @@ import PrivateRoute from './PrivateRoute';
 import Login from '../../Containers/Login/Login';
 import SearchPage from '../../Containers/SearchPage/SearchPage';
 import DetailPage from '../../Containers/DetailPage/DetailPage';
-import WishlistPage from '../../Containers/BusinessWishlishPage/WishlistPage';
+import WishlistPage from '../../Containers/WishlishPage/WishlistPage';
 import PublicRoute from './PublicRoute';
 import Register from '../../Containers/Register/Register';
 import HomePage from '../../Containers/HomePage/HomePage';

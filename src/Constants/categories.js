@@ -23,7 +23,13 @@ export const categories = {
     'Coffee & Tea Maker',
     'Cotton Candy Maker',
     'Donut Maker',
-    'Ice Cream & Yoghurt Maker'
+    'Ice Cream & Yoghurt Maker',
+    'Mesin Es Serut',
+    'Noodle & Pasta Maker',
+    'Pancake Maker',
+    'Popcorn Maker',
+    'Sushi Maker & Roll',
+    'Waffle Maker'
   ],
   'Bekal': [
     'Botol Minum',
@@ -59,7 +65,9 @@ export const categories = {
     'Sealer Makanan',
     'Tempat Buah & Sayur',
     'Tempat Bumbu',
-    'Tempat Roti'
+    'Tempat Roti',
+    'Tempat Saos & Kecap',
+    'Toples Makanan'
   ],
   'Peralatan Dapur': [
     'Alat Pembuka Botol',
@@ -85,7 +93,14 @@ export const categories = {
     'Piring & Mangkok Saji',
     'Pitcher Minuman',
     'Sedotan',
-    'Sendok & Garpu Makan'
+    'Sendok & Garpu Makan',
+    'Sendok Bebek',
+    'Sendok & Garpu Dessert',
+    'Sendok & Garpu Makan',
+    'Sumpit',
+    'Tempat Gelas & Piring',
+    'Tudung Saji',
+    'Tutup Gelas & Piring'
   ],
   'Peralatan Masak': [
     'Cetakan Es & Pudding',
@@ -98,7 +113,9 @@ export const categories = {
     'Saringan Masak',
     'Sendok Takar',
     'Spatula & Sutil',
-    'Steamer'
+    'Steamer',
+    'Teko & Pemanas Air',
+    'Wajan'
   ],
   'Peralatan Cuci Piring': [
     'Dish Dryer',
