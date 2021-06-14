@@ -18,7 +18,7 @@ const DropDownListContainer = styled("div")`
   display: flex;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   width: 80vw;
-  height: 80vh;
+  height: 100vh;
   overflow: scroll;
 `;
 
