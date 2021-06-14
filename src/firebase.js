@@ -400,16 +400,24 @@ export const addUserSearchHistory = async (productId) => {
 export const getRecommendedProducts = async () => {
   try {
     const currentUserSearchHistory = await getUserSearchHistory();
-    const recentSearchedProduct = currentUserSearchHistory[0];
-    const recentSearchedProductId = recentSearchedProduct.product_id;
-    const similarProducts = await getSimilarProductsByProductId(recentSearchedProductId);
 
-    const recommendedProducts = similarProducts.map(product => product.product)
+    let index = 0;
+    let recommendedProducts = [];
 
-    const priorityProduct = recommendedProducts.filter(product => product.image !== null);
-    const otherProducts = recommendedProducts.filter(product => product.image === null);
+    while(recommendedProducts.length < 4){
+      const recentSearchedProduct = currentUserSearchHistory[index];
+      const recentSearchedProductId = recentSearchedProduct.product_id;
+      const products = await getSimilarProductsByProductId(recentSearchedProductId);
 
-    return [...priorityProduct, ...otherProducts].splice(0,4);
+      const similarProducts = products
+        .map(product => product.product)
+        .filter(product => product.image !== null);
+
+      recommendedProducts.push(...similarProducts);
+      index += 1;
+    }
+    console.log(recommendedProducts);
+    return recommendedProducts;
   } catch(error) {
     const allProducts = await getAllProducts(defaultFilter);
     return allProducts[0].splice(0,4);
