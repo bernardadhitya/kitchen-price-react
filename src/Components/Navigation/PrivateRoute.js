@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
 import { fetchCurrentUser } from '../../firebase';
 import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
 
 const isLoggedIn = async () => {
   const user = await fetchCurrentUser();
@@ -14,7 +15,10 @@ const renderAuthorizedComponent = (AuthorizedComponent, props) => {
     <div className='component-wrapper'>
       <Navbar/>
       <div style={{marginTop: 100}}></div>
-      <AuthorizedComponent {...props}/>
+      <div style={{minHeight: '100vh'}}>
+        <AuthorizedComponent {...props}/>
+      </div>
+      <Footer/>
     </div>
   );
 };
