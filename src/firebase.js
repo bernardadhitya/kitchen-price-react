@@ -2,7 +2,6 @@ import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { firebaseConfig, newsApiConfig, supabaseConfig } from './env';
-import { getJobRatingByRatingList } from './Constants/rating';
 import { createClient } from '@supabase/supabase-js'
 import { getAllCategories, categories } from './Constants/categories';
 import { allMarketplaces } from './Constants/marketplaces';

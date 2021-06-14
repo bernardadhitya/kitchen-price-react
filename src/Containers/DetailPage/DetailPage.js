@@ -40,11 +40,11 @@ const DetailPage = () => {
     if (!inWishlist){
       await addToWishlist(parseInt(id));
       setSeverity('success');
-      setMessage('Pekerjaan ini sudah masuk ke wishlist anda');
+      setMessage('Produk ini sudah masuk ke wishlist anda');
     } else {
       await removeFromWishlist(parseInt(id));
       setSeverity('error');
-      setMessage('Pekerjaan ini sudah dihapus dari wishlist anda');
+      setMessage('Produk ini sudah dihapus dari wishlist anda');
     }
     setOpenSnackbar(true);
     setRefresh(refresh + 1);
