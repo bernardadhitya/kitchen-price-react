@@ -17,6 +17,7 @@
   margin: 10px 0;
   height: 75px;
   text-transform: capitalize;
+  overflow: hidden;
 }
 
 .item-card .item-price{
