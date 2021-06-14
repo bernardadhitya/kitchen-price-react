@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import ItemCard from '../../Components/ItemCard/ItemCard';
+import { allMarketplaces } from '../../Constants/marketplaces';
 import { getNews, getRecommendedProducts } from '../../firebase';
 import './HomePage.css';
 
@@ -46,6 +47,38 @@ const HomePage = () => {
   const renderNewsCards = () => {
     if (news.length === 0) return;
     return news.splice(0,4).map(article => renderNewsCard(article));
+  }
+
+  const renderSupportedMarketplaces = () => {
+    return (
+      <div style={{
+        width: '100%',
+        textAlign: 'center',
+        alignContent: 'center',
+        backgroundColor: '#D9D9D9',
+        margin: '20px 0'
+      }}>
+        <div style={{height: '50px'}}></div>
+        <h1>Supported Marketplace</h1>
+        <div style={{height: '20px'}}></div>
+        <Grid container>
+        {
+          allMarketplaces.map(marketplace => {
+            return (
+              <Grid item xs={4}>
+                <img
+                  src={require(`../../Assets/images/${marketplace}.png`)}
+                  style={{height: '40px', margin: '40px 20px'}}
+                  alt=''
+                />
+              </Grid>
+            )
+          })
+        }
+        </Grid>
+        <div style={{height: '50px'}}></div>
+      </div>
+    )
   }
 
   const renderRecommendedItemCards = () => {
@@ -96,6 +129,7 @@ const HomePage = () => {
           {renderNewsCards()}
         </Grid>
       </div>
+      {renderSupportedMarketplaces()}
     </div>
   )
 }
