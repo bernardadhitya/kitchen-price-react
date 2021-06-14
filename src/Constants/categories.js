@@ -19,7 +19,7 @@ export const categories = {
     'Minuman',
     'Timer Masak'
   ],
-  'Alat Dapur Khusus': [
+  'Alat Masak Khusus': [
     'Coffee & Tea Maker',
     'Cotton Candy Maker',
     'Donut Maker',

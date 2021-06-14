@@ -410,6 +410,7 @@ export const getRecommendedProducts = async () => {
       const products = await getSimilarProductsByProductId(recentSearchedProductId);
 
       const similarProducts = products
+        //.filter(product => product.similarityScore < 1)
         .map(product => product.product)
         .filter(product => product.image !== null);
 
@@ -419,6 +420,7 @@ export const getRecommendedProducts = async () => {
     console.log(recommendedProducts);
     return recommendedProducts;
   } catch(error) {
+    console.log(error);
     const allProducts = await getAllProducts(defaultFilter);
     return allProducts[0].splice(0,4);
   }
