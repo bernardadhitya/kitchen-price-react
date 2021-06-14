@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { addToWishlist, getProductById, getSimilarProductsByProductId, getWishlistByCurrentUserId, removeFromWishlist } from '../../firebase';
+import { addToWishlist, getProductById, getSimilarProductsByProductId, getWishlistByCurrentUserId, removeFromWishlist, fetchCurrentUser } from '../../firebase';
 import './DetailPage.css';
 import StarIcon from '@material-ui/icons/Star';
 import { Grid, Snackbar } from '@material-ui/core';
@@ -14,6 +14,7 @@ const DetailPage = () => {
 
   const [item, setItem] = useState(null);
   const [similarItems, setSimilarItems] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [inWishlist, setInWishlist] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [message, setMessage] = useState('');
@@ -26,20 +27,22 @@ const DetailPage = () => {
       const currentUserWishlist = await getWishlistByCurrentUserId();
       const fetchedItem = await getProductById(id);
       const fetchedSimilarItems = await getSimilarProductsByProductId(id);
+      const fetchedCurrentUser = await fetchCurrentUser();
       setInWishlist(currentUserWishlist.wishlist.includes(parseInt(id)));
       setItem(fetchedItem);
       setSimilarItems(fetchedSimilarItems);
+      setCurrentUser(fetchedCurrentUser);
     }
     fetchData();
   }, [refresh]);
 
   const handleAddOrRemoveWishlist = async () => {
     if (!inWishlist){
-      await addToWishlist(id);
+      await addToWishlist(parseInt(id));
       setSeverity('success');
       setMessage('Pekerjaan ini sudah masuk ke wishlist anda');
     } else {
-      await removeFromWishlist(id);
+      await removeFromWishlist(parseInt(id));
       setSeverity('error');
       setMessage('Pekerjaan ini sudah dihapus dari wishlist anda');
     }
@@ -144,18 +147,7 @@ const DetailPage = () => {
                   </div>
                   <div className='similar-item-price'>{formattedCurrency(item.price)}</div>
                   <div style={{display: 'flex', alignItems: 'center'}}>
-                    <a href={item.url} style={{width: '85%'}}>
-                      <div className='similar-item-redirect-button'>
-                        <h4>Cek Sekarang</h4>
-                      </div>
-                    </a>
-                    <div style={{width: '10px'}}></div>
-                    <div className='heart-wrapper' onClick={() => handleAddOrRemoveWishlist()}>
-                      { inWishlist ? 
-                        <Favorite fontSize='large' color='error'/>
-                        : <FavoriteBorder fontSize='large' color='error'/>
-                      }
-                    </div>
+                    {renderActionButtons()}
                   </div>
                 </div>
               </div>
@@ -164,6 +156,30 @@ const DetailPage = () => {
         </div>
       </div>
     )
+  }
+
+  const renderActionButtons = () => {
+    return !!currentUser ? 
+      <>
+        <a href={item.url} style={{width: '85%'}}>
+          <div className='similar-item-redirect-button'>
+            <h4>Cek Sekarang</h4>
+          </div>
+        </a>
+        <div style={{width: '10px'}}></div>
+        <div className='heart-wrapper' onClick={() => handleAddOrRemoveWishlist()}>
+          { inWishlist ? 
+            <Favorite fontSize='large' color='error'/>
+            : <FavoriteBorder fontSize='large' color='error'/>
+          }
+        </div>
+      </> : <>
+        <a href={item.url} style={{width: '100%'}}>
+          <div className='similar-item-redirect-button'>
+            <h4>Cek Sekarang</h4>
+          </div>
+        </a>
+      </>
   }
 
   const renderSnackbar = () => {
