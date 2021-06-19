@@ -415,7 +415,7 @@ export const getRecommendedProducts = async () => {
       index += 1;
     }
     console.log(recommendedProducts);
-    return recommendedProducts;
+    return recommendedProducts.splice(0,4);
   } catch(error) {
     console.log(error);
     const allProducts = await getAllProducts(defaultFilter);
