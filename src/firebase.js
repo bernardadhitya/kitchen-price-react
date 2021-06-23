@@ -234,7 +234,9 @@ const defaultFilter = {
   maxPrice: Math.pow(10,10),
   selectedCategories: getAllCategories(),
   selectedMarketplaces: allMarketplaces,
-  selectedRating: 0
+  selectedRating: 0,
+  sortBy: 'rating',
+  ascendingOrder: false
 }
 
 export const getUserById = async (userId) => {
