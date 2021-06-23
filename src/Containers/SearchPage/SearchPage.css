@@ -10,6 +10,18 @@
   cursor: pointer;
 }
 
+.sort-button {
+  display: flex;
+  margin: 40px 0 0 0;
+  border: 1px solid rgba(0,0,0,0.2);
+  color: rgba(0,0,0,0.7);
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
 .pagination-container {
   width: 100%;
   display: flex;

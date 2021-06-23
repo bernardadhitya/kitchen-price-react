@@ -14,6 +14,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ItemCard from '../../Components/ItemCard/ItemCard';
 import { getAllCategories, getCategoriesByTopics } from '../../Constants/categories';
 import { allMarketplaces } from '../../Constants/marketplaces';
+import SortMenu from '../../Components/SortMenu/SortMenu';
 
 var _ = require('lodash');
 
@@ -45,6 +46,8 @@ const SearchPage = () => {
   const [selectedMarketplaces, setSelectedMarketplaces] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [refresh, setRefresh] = useState(0);
+  const [sortBy, setSortBy] = useState('lowest-fee');
+  const [anchorSortMenu, setAnchorSortMenu] = useState(null);
 
   const queries = qs.parse(location.search);
 
@@ -85,9 +88,18 @@ const SearchPage = () => {
 
   const renderSortByMenu = () => {
     return (
-      <div className='filter-button' onClick={() => setOpenModal(true)}>
-        <FilterListIcon style={{marginRight: '8px', color: 'rgba(0,0,0,0.7)'}}/>
-        <p>Filter</p>
+      <div style={{display: 'flex'}}>
+        <SortMenu
+          anchorSortMenu={anchorSortMenu}
+          setAnchorSortMenu={setAnchorSortMenu}
+          setSortBy={setSortBy}
+          sortBy={sortBy}
+        />
+        <div style={{width: '10px'}}/>
+        <div className='filter-button' onClick={() => setOpenModal(true)}>
+          <FilterListIcon style={{marginRight: '8px', color: 'rgba(0,0,0,0.7)'}}/>
+          <p>Filter</p>
+        </div>
       </div>
     )
   }
@@ -127,7 +139,7 @@ const SearchPage = () => {
   return (
     <div style={{margin: '20px 100px'}}>
       <Grid container>
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           {
             !!searchQuery &&
             <p style={{margin: '60px 0 0 20px'}}>
@@ -135,7 +147,7 @@ const SearchPage = () => {
             </p>
           }
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <div style={{float: 'right', marginRight: '30px'}}>
             {renderSortByMenu()}
           </div>
