@@ -315,7 +315,7 @@ export const removeFromWishlist = async (productId) => {
 }
 
 export const getNews = async () => {
-  const url = `https://newsapi.org/v2/everything?q=cooking&apiKey=${newsApiConfig.key}&sortBy=popularity`
+  const url = `https://newsapi.org/v2/everything?q=cooking&apiKey=${newsApiConfig.key}&sortBy=popularity&pageSize=100`
   const response = await axios.get(url)
   const data = response.data
 

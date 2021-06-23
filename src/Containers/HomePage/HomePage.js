@@ -139,6 +139,15 @@ const HomePage = () => {
         <Grid container>
           {renderNewsCards()}
         </Grid>
+        <Grid container>
+          <Grid item xs={5}/>
+          <Grid item xs={2}>
+            <div className='more-button' onClick={() => history.push('/news')}>
+              Selengkapnya
+            </div>
+          </Grid>
+          <Grid item xs={5}/>
+        </Grid>
       </div>
       {renderSupportedMarketplaces()}
     </div>

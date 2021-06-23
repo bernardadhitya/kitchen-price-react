@@ -8,6 +8,7 @@ import WishlistPage from '../../Containers/WishlishPage/WishlistPage';
 import PublicRoute from './PublicRoute';
 import Register from '../../Containers/Register/Register';
 import HomePage from '../../Containers/HomePage/HomePage';
+import NewsPage from '../../Containers/NewsPage/NewsPage';
 
 const UserNavigation = ({match}) => {
   return (
@@ -25,6 +26,7 @@ const HomeNavigation = () => {
       <PublicRoute path='/search' component={SearchPage}/>
       <PublicRoute path='/login' component={Login}/>
       <PublicRoute path='/register' component={Register}/>
+      <PublicRoute path='/news' component={NewsPage}/>
       <Route path='/user' component={UserNavigation}/>
       <PublicRoute path='/:id' component={DetailPage}/>
     </Switch>
