@@ -49,6 +49,19 @@ const SearchPage = () => {
   const queries = qs.parse(location.search);
 
   const searchQuery = queries.query;
+  
+  useEffect(() => {
+    const showModal = async () => {
+      try {
+        if (location.state.filterModalOpen === true){
+          setOpenModal(true);
+        }
+      } catch (error) {
+        return;
+      }
+    }
+    showModal();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,12 +82,6 @@ const SearchPage = () => {
     }
     fetchData();
   }, [location, refresh]);
-
-  console.log('minPrice:',minPrice)  
-  console.log('maxPrice:',maxPrice)
-  console.log('selectedCategories:', selectedCategories)
-  console.log('selectedMarketplaces:', selectedMarketplaces)
-  console.log('selectedRating:', selectedRating)  
 
   const renderSortByMenu = () => {
     return (

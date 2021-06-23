@@ -1,11 +1,14 @@
 import { Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import ItemCard from '../../Components/ItemCard/ItemCard';
 import { allMarketplaces } from '../../Constants/marketplaces';
 import { getNews, getRecommendedProducts } from '../../firebase';
 import './HomePage.css';
 
 const HomePage = () => {
+
+  const history = useHistory();
 
   const [items, setItems] = useState([]);
   const [news, setNews] = useState([]);
@@ -113,7 +116,15 @@ const HomePage = () => {
         <p style={{color: 'white'}}>
           Anda bisa mencari peralatan dapur sesuai dengan keinginan dan rekomendasi dari kami.
         </p>
-        <div className='home-redirect-button'>
+        <div
+          className='home-redirect-button'
+          onClick={() => history.push({
+            pathname: '/search',
+            state: {
+              filterModalOpen: true
+            }
+          })}
+        >
           <p>Cari Sekarang</p>
         </div>
       </div>

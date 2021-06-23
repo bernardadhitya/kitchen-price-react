@@ -218,6 +218,7 @@ const FilterModal = (props) => {
 
   return (
     <div className={classes.paper}>
+      <h2 style={{textAlign: 'center'}}>Cari Produk Rekomendasi</h2>
       {renderCategoryFilters()}
       {renderPriceRangeFilter()}
       {renderRatingFilter()}
