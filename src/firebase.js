@@ -68,30 +68,21 @@ export const getAllProducts = async (filters) => {
     maxPrice,
     selectedCategories,
     selectedMarketplaces,
-    selectedRating
+    selectedRating,
+    sortBy,
+    ascendingOrder
   } = filters;
 
-  let { data: priorityProducts } = await supabase
+  let { data: allProducts } = await supabase
   .from('products')
   .select('*')
-  .not('image', 'is', null)
   .gte('price', minPrice)
   .lte('price', maxPrice)
   .in('category', selectedCategories)
   .in('source', selectedMarketplaces)
   .gte('rating', selectedRating)
+  .order(sortBy, { ascending: ascendingOrder })
 
-  let { data: products } = await supabase
-  .from('products')
-  .select('*')
-  .is('image', null)
-  .gte('price', minPrice)
-  .lte('price', maxPrice)
-  .in('category', selectedCategories)
-  .in('source', selectedMarketplaces)
-  .gte('rating', selectedRating)
-
-  let allProducts = [...priorityProducts, ...products];
   let groupedProducts = []
 
   while (allProducts.length > 0) {
@@ -107,32 +98,23 @@ const getProductsByCategory = async (category, filters) => {
     maxPrice,
     selectedCategories,
     selectedMarketplaces,
-    selectedRating
+    selectedRating,
+    sortBy,
+    ascendingOrder
   } = filters;
-
-  let { data: priorityProducts } = await supabase
-  .from('products')
-  .select('*')
-  .eq('category', category)
-  .not('image', 'is', null)
-  .gte('price', minPrice)
-  .lte('price', maxPrice)
-  .in('category', selectedCategories)
-  .in('source', selectedMarketplaces)
-  .gte('rating', selectedRating)
 
   let { data: products } = await supabase
   .from('products')
   .select('*')
   .eq('category', category)
-  .is('image', null)
   .gte('price', minPrice)
   .lte('price', maxPrice)
   .in('category', selectedCategories)
   .in('source', selectedMarketplaces)
   .gte('rating', selectedRating)
+  .order(sortBy, { ascending: ascendingOrder })
 
-  return [...priorityProducts, ...products]
+  return products
 }
 
 const getProductsByTitle = async (searchString, filters) => {
@@ -141,32 +123,23 @@ const getProductsByTitle = async (searchString, filters) => {
     maxPrice,
     selectedCategories,
     selectedMarketplaces,
-    selectedRating
+    selectedRating,
+    sortBy,
+    ascendingOrder
   } = filters;
-
-  let { data: priorityProducts } = await supabase
-  .from('products')
-  .select('*')
-  .ilike('title', `%${searchString}%`)
-  .not('image', 'is', null)
-  .gte('price', minPrice)
-  .lte('price', maxPrice)
-  .in('category', selectedCategories)
-  .in('source', selectedMarketplaces)
-  .gte('rating', selectedRating)
 
   let { data: products } = await supabase
   .from('products')
   .select('*')
   .ilike('title', `%${searchString}%`)
-  .is('image', null)
   .gte('price', minPrice)
   .lte('price', maxPrice)
   .in('category', selectedCategories)
   .in('source', selectedMarketplaces)
   .gte('rating', selectedRating)
+  .order(sortBy, { ascending: ascendingOrder })
 
-  return [...priorityProducts, ...products]
+  return products
 }
 
 const getProductsByTopic = async (topic, filters) => {
@@ -175,29 +148,12 @@ const getProductsByTopic = async (topic, filters) => {
     maxPrice,
     selectedCategories,
     selectedMarketplaces,
-    selectedRating
+    selectedRating,
+    sortBy,
+    ascendingOrder
   } = filters;
 
   let allProducts = []
-
-  const getAllPriorityProductsByTopic = async () => {
-    await Promise.all(
-      categories[topic].map(async (category) => {
-        let { data } = await supabase
-          .from('products')
-          .select('*')
-          .eq('category', category)
-          .not('image', 'is', null)
-          .gte('price', minPrice)
-          .lte('price', maxPrice)
-          .in('category', selectedCategories)
-          .in('source', selectedMarketplaces)
-          .gte('rating', selectedRating)
-        allProducts.push(...data);
-        return category
-      })
-    );
-  }
 
   const getAllProductsByTopic = async () => {
     await Promise.all(
@@ -206,19 +162,18 @@ const getProductsByTopic = async (topic, filters) => {
           .from('products')
           .select('*')
           .eq('category', category)
-          .is('image', null)
           .gte('price', minPrice)
           .lte('price', maxPrice)
           .in('category', selectedCategories)
           .in('source', selectedMarketplaces)
           .gte('rating', selectedRating)
+          .order(sortBy, { ascending: ascendingOrder })
         allProducts.push(...data);
         return category
       })
     );
   }
 
-  await getAllPriorityProductsByTopic();
   await getAllProductsByTopic();
 
   return allProducts;

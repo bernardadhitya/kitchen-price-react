@@ -46,7 +46,7 @@ const SearchPage = () => {
   const [selectedMarketplaces, setSelectedMarketplaces] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [refresh, setRefresh] = useState(0);
-  const [sortBy, setSortBy] = useState('lowest-fee');
+  const [sortBy, setSortBy] = useState('rating');
   const [anchorSortMenu, setAnchorSortMenu] = useState(null);
 
   const queries = qs.parse(location.search);
@@ -75,7 +75,9 @@ const SearchPage = () => {
           !_.isEmpty(selectedCategories) ? getCategoriesByTopics(selectedCategories) : getAllCategories(),
         selectedMarketplaces:
           !_.isEmpty(selectedMarketplaces) ? selectedMarketplaces : allMarketplaces,
-        selectedRating: !!selectedRating ? selectedRating : 0
+        selectedRating: !!selectedRating ? selectedRating : 0,
+        sortBy: sortBy === 'rating' ? 'rating' : 'price',
+        ascendingOrder: sortBy === 'lowest-fee' ? true : false
       };
 
       const fetchedItems = _.isEmpty(queries) ? 
@@ -84,7 +86,7 @@ const SearchPage = () => {
       setItems(fetchedItems);
     }
     fetchData();
-  }, [location, refresh]);
+  }, [location, refresh, sortBy]);
 
   const renderSortByMenu = () => {
     return (
